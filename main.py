@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from itertools import combinations_with_replacement
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -42,7 +43,6 @@ def display_results(model, X_train, X_test, y_train, y_test):
 
 
 # # Test function display_results
-
 # data = pd.read_csv('heart_disease_risk.csv')
 # X = data.drop('decision', axis=1)
 # y = data['decision']
@@ -51,6 +51,8 @@ def display_results(model, X_train, X_test, y_train, y_test):
 # model = LogisticRegression(solver='liblinear')
 # display_results(model, X_train, X_test, y_train, y_test)
 
+
+# Feature engineering
 
 def one_hot_encoding(data, categorical_columns):
     encoder = OneHotEncoder()
@@ -74,10 +76,25 @@ def ordinal_encoding(data, categorical_columns, ordinal_mapping):
     return data
 
 
+def generate_polynomial_feature_names(data, degree):
+    feature_names = []
+    n_features = data.shape[1]
+    for d in range(1, degree + 1):
+        for indices in combinations_with_replacement(range(n_features), d):
+            name = "x0"
+            if len(indices) > 1:
+                name += "**" + str(len(indices))
+            for i in range(1, n_features):
+                if i in indices:
+                    name += " * x" + str(i)
+            feature_names.append(name)
+    return feature_names
+
+
 def create_polynomial_features(data, degree):
     polynomial_features = PolynomialFeatures(degree=degree, include_bias=False)
     transformed_data = polynomial_features.fit_transform(data)
-    new_feature_names = polynomial_features.get_feature_names(data.columns)
+    new_feature_names = generate_polynomial_feature_names(data, degree)
     data = pd.DataFrame(transformed_data, columns=new_feature_names)
     return data
 
@@ -141,24 +158,4 @@ def create_time_features(data, time_column):
     data[time_column] = pd.to_datetime(data[time_column])
     data['season'] = data[time_column].dt.quarter
     data['is_weekend'] = data[time_column].dt.weekday.isin([5, 6]).astype(int)
-    return data
-
-
-def extract_text_features(data, text_column):
-    vectorizer = CountVectorizer()
-    text_features = vectorizer.fit_transform(data[text_column])
-    text_feature_names = vectorizer.get_feature_names()
-    text_features = pd.DataFrame(text_features.toarray(), columns=text_feature_names)
-    data = pd.concat([data, text_features], axis=1)
-    data.drop(text_column, axis=1, inplace=True)
-    return data
-
-
-def transform_text_to_features(data, text_column):
-    vectorizer = TfidfVectorizer()
-    text_features = vectorizer.fit_transform(data[text_column])
-    text_feature_names = vectorizer.get_feature_names()
-    text_features = pd.DataFrame(text_features.toarray(), columns=text_feature_names)
-    data = pd.concat([data, text_features], axis=1)
-    data.drop(text_column, axis=1, inplace=True)
     return data
