@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from itertools import combinations_with_replacement
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics import accuracy_score, precision_score, f1_score, roc_auc_score, recall_score, confusion_matrix
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, PolynomialFeatures, StandardScaler, MinMaxScaler, \
     KBinsDiscretizer
@@ -40,16 +39,6 @@ def display_results(model, X_train, X_test, y_train, y_test):
     plt.ylabel("True")
     plt.title("Confusion Matrix")
     plt.show()
-
-
-# # Test function display_results
-# data = pd.read_csv('heart_disease_risk.csv')
-# X = data.drop('decision', axis=1)
-# y = data['decision']
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-#
-# model = LogisticRegression(solver='liblinear')
-# display_results(model, X_train, X_test, y_train, y_test)
 
 
 # Feature engineering
