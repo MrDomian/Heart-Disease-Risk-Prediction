@@ -1,14 +1,14 @@
-import datetime
 import numpy as np
 import pandas as pd
-# import seaborn as sns
-# import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics import accuracy_score, precision_score, f1_score, roc_auc_score, recall_score, confusion_matrix
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder, PolynomialFeatures, StandardScaler, MinMaxScaler, KBinsDiscretizer
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, PolynomialFeatures, StandardScaler, MinMaxScaler, \
+    KBinsDiscretizer
 
 
 def display_results(model, X_train, X_test, y_train, y_test):
@@ -21,7 +21,6 @@ def display_results(model, X_train, X_test, y_train, y_test):
     sensitivity = recall_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
-
     tn, fp, fn, tp = cm.ravel()
     g_mean = (tp / (tp + fn)) * (tn / (tn + fp))
     specificity = tn / (tn + fp)
@@ -33,10 +32,6 @@ def display_results(model, X_train, X_test, y_train, y_test):
     print("Sensitivity:", round(sensitivity, 2))
     print("Specificity:", round(specificity, 2))
     print("Precision:", round(precision, 2))
-    # print("True Negative:", cm[0, 0])
-    # print("False Positive:", cm[0, 1])
-    # print("False Negative:", cm[1, 0])
-    # print("True Positive:", cm[1, 1])
 
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, cmap="PuBuGn", fmt="d")
@@ -47,6 +42,7 @@ def display_results(model, X_train, X_test, y_train, y_test):
 
 
 # # Test function display_results
+
 # data = pd.read_csv('heart_disease_risk.csv')
 # X = data.drop('decision', axis=1)
 # y = data['decision']
@@ -58,8 +54,9 @@ def display_results(model, X_train, X_test, y_train, y_test):
 
 def one_hot_encoding(data, categorical_columns):
     encoder = OneHotEncoder()
-    encoded_data = pd.DataFrame(encoder.fit_transform(data[categorical_columns]).toarray(), columns=encoder.get_feature_names(categorical_columns))
-    data = pd.concat([data, encoded_data], axis=1)
+    encoded_data = pd.DataFrame(encoder.fit_transform(data[categorical_columns]).toarray())
+    encoded_data.columns = [f"{col}_{cat}" for col in categorical_columns for cat in encoder.categories_[categorical_columns.index(col)]]
+    data = pd.concat([data.reset_index(drop=True), encoded_data], axis=1)
     data.drop(categorical_columns, axis=1, inplace=True)
     return data
 
