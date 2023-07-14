@@ -69,8 +69,7 @@ def balance_data_smote(X, y):
 
 
 def balance_data_smotetomek(X, y):
-    zeros = np.count_nonzero(y.values == 0)
-    X_bal, y_bal = SMOTETomek(sampling_strategy ={0: zeros, 1: int(zeros/2)}).fit_resample(X, y)
+    X_bal, y_bal = SMOTETomek().fit_resample(X, y)
     return X_bal, y_bal
 
 
