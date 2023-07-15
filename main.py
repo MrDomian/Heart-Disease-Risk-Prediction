@@ -1,11 +1,17 @@
 import numpy as np
+import pickle
+import onnx
+import onnxruntime
 import pandas as pd
 import seaborn as sns
+import skl2onnx
 import matplotlib.pyplot as plt
 
 from itertools import combinations_with_replacement
+from onnxconverter_common import FloatTensorType
+from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, f1_score, roc_auc_score, recall_score, confusion_matrix
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, PolynomialFeatures, StandardScaler, MinMaxScaler, \
     KBinsDiscretizer
@@ -13,10 +19,14 @@ from imblearn.combine import SMOTETomek
 from imblearn.over_sampling import SMOTE
 
 
-def train_model(model, X_train, X_test, y_train, y_test):
+# Machine learning
+def train_model(model, X_train, X_test, y_train):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
+    return y_pred
 
+
+def generate_results(y_pred, y_test):
     accuracy = accuracy_score(y_test, y_pred)
     roc_auc = roc_auc_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
@@ -30,19 +40,18 @@ def train_model(model, X_train, X_test, y_train, y_test):
 
     list_results = [round(result, 2) for result in
                     [accuracy, roc_auc, g_mean, f1, sensitivity, specificity, precision, avg, tn, fp, fn, tp]]
-
     return list_results, conf_matrix
 
 
-def display_results(results):
-    accuracy = results[0]
-    roc_auc = results[1]
-    g_mean = results[2]
-    f1 = results[3]
-    sensitivity = results[4]
-    specificity = results[5]
-    precision = results[6]
-    avg = results[7]
+def display_results(list_results):
+    accuracy = list_results[0]
+    roc_auc = list_results[1]
+    g_mean = list_results[2]
+    f1 = list_results[3]
+    sensitivity = list_results[4]
+    specificity = list_results[5]
+    precision = list_results[6]
+    avg = list_results[7]
 
     print("Accuracy:", accuracy)
     print("ROC AUC Score:", roc_auc)
@@ -71,18 +80,6 @@ def balance_data_smote(X, y):
 def balance_data_smotetomek(X, y):
     X_bal, y_bal = SMOTETomek().fit_resample(X, y)
     return X_bal, y_bal
-
-
-# # Test functions: train_model, display_results, display_confusion_matrix
-# data = pd.read_csv('heart_disease_risk.csv')
-# X = data.drop('decision', axis=1)
-# y = data['decision']
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-# model = LogisticRegression(solver='liblinear')
-#
-# results, conf_matrix = train_model(model, X_train, X_test, y_train, y_test)
-# display_results(results)
-# display_confusion_matrix(conf_matrix)
 
 
 # Feature engineering
@@ -192,3 +189,94 @@ def create_time_features(data, time_column):
     data['season'] = data[time_column].dt.quarter
     data['is_weekend'] = data[time_column].dt.weekday.isin([5, 6]).astype(int)
     return data
+
+
+# Model export
+def export_onnx_model(model, X_train, y_train, filename):
+    try:
+        if X_train.shape[0] != y_train.shape[0]:
+            raise ValueError("Number of samples in X_train and y_train must match.")
+        model.fit(X_train, y_train)
+
+        initial_type = [('float_input', FloatTensorType([None, X_train.shape[1]]))]
+        onnx_model = skl2onnx.convert.convert_sklearn(model, initial_types=initial_type)
+        onnx.save_model(onnx_model, f'{filename}.onnx')
+        print("Model exported successfully.")
+    except Exception as e:
+        print("An error occurred during model export:", e)
+
+
+def test_onnx_model(filename_onnx, filename_npy):
+    try:
+        model_path = f'{filename_onnx}.onnx'
+        session = onnxruntime.InferenceSession(model_path)
+    except (FileNotFoundError, onnxruntime.OrtInvalidGraph):
+        print("Error: Failed to load the ONNX model.")
+        return
+
+    try:
+        test_data_path = f'{filename_npy}.npy'
+        test_data = np.load(test_data_path)
+    except FileNotFoundError:
+        print("Error: Failed to load the test data.")
+        return
+
+    input_name = session.get_inputs()[0].name
+    output_name = session.get_outputs()[0].name
+    predictions = session.run([output_name], {input_name: test_data})
+    return predictions
+
+
+def export_pickle_model(model, X_train, y_train, filename):
+    try:
+        if X_train.shape[0] != y_train.shape[0]:
+            raise ValueError("Number of samples in X_train and y_train must match.")
+        model.fit(X_train, y_train)
+
+        with open(f'{filename}.pkl', 'wb') as file:
+            pickle.dump(model, file)
+        print("Model exported successfully.")
+    except (ValueError, NotFittedError) as e:
+        print("An error occurred during model export:", e)
+
+
+def test_pickle_model(filename_pickle, filename_npy):
+    try:
+        with open(f'{filename_pickle}.pkl', 'rb') as file:
+            model = pickle.load(file)
+    except FileNotFoundError:
+        print("Error: Failed to load the pickle model.")
+        return
+
+    try:
+        test_data_path = f'{filename_npy}.npy'
+        test_data = np.load(test_data_path)
+    except FileNotFoundError:
+        print("Error: Failed to load the test data.")
+        return
+
+    predictions = model.predict(test_data)
+    return predictions
+
+
+# # Function testing for: machine learning, model export
+# data = pd.read_csv('heart_disease_risk.csv')
+# X = data.drop('decision', axis=1)
+# y = data['decision']
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+# model = LogisticRegression(solver='liblinear')
+#
+# # Machine learning
+# y_pred = train_model(model, X_train, X_test, y_train)
+# results, conf_matrix = generate_results(y_pred, y_test)
+# display_results(results)
+# display_confusion_matrix(conf_matrix)
+#
+# # Model export
+# export_onnx_model(model, X_train, y_train, 'model')
+# result = test_onnx_model("model", "test_data")
+# print(result)
+#
+# export_pickle_model(model, X_train, y_train, 'model')
+# result = test_pickle_model("model", "test_data")
+# print(result)
