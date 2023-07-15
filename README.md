@@ -3,12 +3,16 @@ The Heart Disease Project aims to apply data analysis and machine learning techn
 Data source: https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset
 
 ## File descriptions:
-- Data preparation.ipynb: Operations aimed at preparing the data, such as cleansing, transforming, and normalizing, to make it suitable for analysis and modeling.
-- Data analysis.ipynb: Presents the analysis of the dataset along with visualizations, descriptive statistics, and conclusions that help understand the characteristics and relationships within the data.
-- Machine learning.ipynb: Operations related to creating and training machine learning models based on input data, in order to forecast or classify new instances based on patterns in the training data.
-- Heart disease: A folder containing unprocessed datasets, information about them, and other relevant files.
-- heart_disease_risk.csv: Processed CSV file containing heart disease data, ready for analysis and modeling.
+- Data preparation.ipynb: Operations to prepare the data, such as cleaning, transformation and normalisation to make it suitable for analysis and modelling.
+- Data analysis.ipynb: Provides analysis of a dataset with visualisations, descriptive statistics and inferences to help understand features and relationships in the data.
+- Feature engineering.ipynb: Contains an implementation of methods and strategies to process data features to improve the analysis and modelling process, such as transformations, feature creation, scaling, dimensionality reduction and feature selection.
+- Profile report.ipynb: the file generates a comprehensive summary and analysis of the dataset, including statistical measures, data distribution, missing values, correlations and interactive visualisations, using the pandas_profiling library.
+- Machine learning.ipynb: Performs learning for heart disease risk detection using various machine learning algorithms. The machine learning provides relevant information, and performance measures are measured for each model.
+- Heart disease: Folder containing raw datasets, information about them and other relevant files.
+- heart_disease_risk.csv: Processed CSV file containing heart disease data, ready for analysis and modelling.
 - processed.cleveland.data: CSV file containing the original unprocessed heart disease data, located in the Heart disease folder.
+
+
 
 ## Principal dataset researchers:
 1. Hungarian Institute of Cardiology. Budapest: Andras Janosi, M.D.
