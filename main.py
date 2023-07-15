@@ -264,6 +264,15 @@ def test_pickle_model(filename_pickle, filename_npy):
 # X = data.drop('decision', axis=1)
 # y = data['decision']
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+# df = np.array([
+#     [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
+#     [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
+#     [67.0, 1.0, 4.0, 120.0, 229.0, 0.0, 2.0, 129.0, 1.0, 2.6, 2.0, 2.0, 7.0],
+#     [37.0, 1.0, 3.0, 130.0, 250.0, 0.0, 0.0, 187.0, 0.0, 3.5, 3.0, 0.0, 3.0],
+#     [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
+# ])
+# df = df.astype(np.float32)
+# np.save('test_data.npy', df)
 # model = LogisticRegression(solver='liblinear')
 #
 # # Machine learning
