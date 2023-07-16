@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+import openpyxl
 import onnx
 import onnxruntime
 import pandas as pd
@@ -11,12 +12,23 @@ from itertools import combinations_with_replacement
 from onnxconverter_common import FloatTensorType
 from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_predict, LeaveOneOut
 from sklearn.metrics import accuracy_score, precision_score, f1_score, roc_auc_score, recall_score, confusion_matrix
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, PolynomialFeatures, StandardScaler, MinMaxScaler, \
     KBinsDiscretizer
+from sklearn.utils import resample
 from imblearn.combine import SMOTETomek
 from imblearn.over_sampling import SMOTE
+
+
+def balance_data_smote(X, y):
+    X_bal, y_bal = SMOTE().fit_resample(X, y)
+    return X_bal, y_bal
+
+
+def balance_data_smotetomek(X, y):
+    X_bal, y_bal = SMOTETomek().fit_resample(X, y)
+    return X_bal, y_bal
 
 
 # Machine learning
@@ -24,6 +36,58 @@ def train_model(model, X_train, X_test, y_train):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     return y_pred
+
+
+def train_model_cross_val(model, X_train, X_test, y_train, y_test, cv):
+    model.fit(X_train, y_train)
+    y_pred = cross_val_predict(model, X_test, y_test, cv=cv)
+    return y_pred
+
+
+def train_model_loo(model, X_train, X_test, y_train, y_test):
+    model.fit(X_train, y_train)
+    loo = LeaveOneOut()
+    y_pred = []
+    for train_index, test_index in loo.split(X_test):
+        X_train_loo, X_test_loo = X_test.values[train_index], X_test.values[test_index]
+        y_train_loo, y_test_loo = y_test.values[train_index], y_test.values[test_index]
+        model.fit(X_train_loo, y_train_loo)
+        y_pred_loo = model.predict(X_test_loo)
+        y_pred.extend(y_pred_loo)
+    return y_pred
+
+
+def train_model_bootstrapping(model, X, y, num_samples, test_size):
+    results = []
+    for _ in range(num_samples):
+        X_train, y_train = resample(X, y, replace=True, n_samples=len(X))
+        X_test, y_test = resample(X, y, replace=True, n_samples=int(len(X) * test_size))
+
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+        results.append((y_pred, y_test))
+    return results
+
+
+def train_model_avg_bootstrapping(model, X, y, num_samples, test_size):
+    results = []
+    for _ in range(num_samples):
+        X_train, y_train = resample(X, y, replace=True, n_samples=len(X))
+        X_test, y_test = resample(X, y, replace=True, n_samples=int(len(X) * test_size))
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+        results.append((y_pred, y_test))
+
+    all_results = []
+    for y_pred, y_test in results:
+        results_list, conf_matrix = generate_results(y_pred, y_test)
+        all_results.append(results_list)
+
+    avg_results = np.mean(all_results, axis=0)
+    avg_results_rounded = [round(result, 2) for result in avg_results]
+
+    return avg_results_rounded
+
 
 
 def generate_results(y_pred, y_test):
@@ -39,7 +103,7 @@ def generate_results(y_pred, y_test):
     avg = (f1 + roc_auc + g_mean) / 3
 
     list_results = [round(result, 2) for result in
-                    [accuracy, roc_auc, g_mean, f1, sensitivity, specificity, precision, avg, tn, fp, fn, tp]]
+                    [accuracy, roc_auc, g_mean, f1, sensitivity, specificity, precision, avg]]
     return list_results, conf_matrix
 
 
@@ -72,14 +136,25 @@ def display_confusion_matrix(conf_matrix):
     plt.show()
 
 
-def balance_data_smote(X, y):
-    X_bal, y_bal = SMOTE().fit_resample(X, y)
-    return X_bal, y_bal
+def save_results_to_xlsx(filename, results_list):
+    try:
+        wb = openpyxl.load_workbook(f'{filename}.xlsx')
+        sheet = wb.active
+    except FileNotFoundError:
+        wb = openpyxl.Workbook()
+        sheet = wb.active
+        headers = ['Model', 'Accuracy', 'ROC AUC', 'G-Mean', 'F1 Score', 'Sensitivity', 'Specificity', 'Precision', 'AVG']
+        for col_num, header in enumerate(headers, 1):
+            sheet.cell(row=1, column=col_num).value = header
 
+    last_row = sheet.max_row + 1
+    for row_num, result in enumerate(results_list, last_row):
+        model_name, *results = result
+        sheet.cell(row=row_num, column=1).value = model_name
+        for col_num, value in enumerate(results, 2):
+            sheet.cell(row=row_num, column=col_num).value = value
 
-def balance_data_smotetomek(X, y):
-    X_bal, y_bal = SMOTETomek().fit_resample(X, y)
-    return X_bal, y_bal
+    wb.save(f'{filename}.xlsx')
 
 
 # Feature engineering
@@ -264,6 +339,7 @@ def test_pickle_model(filename_pickle, filename_npy):
 # X = data.drop('decision', axis=1)
 # y = data['decision']
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+# X_train, y_train = balance_data_smote(X_train, y_train)
 # df = np.array([
 #     [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
 #     [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
@@ -274,14 +350,42 @@ def test_pickle_model(filename_pickle, filename_npy):
 # df = df.astype(np.float32)
 # np.save('test_data.npy', df)
 # model = LogisticRegression(solver='liblinear')
-#
+
 # # Machine learning
+# # Train model (model.predict)
 # y_pred = train_model(model, X_train, X_test, y_train)
 # results, conf_matrix = generate_results(y_pred, y_test)
 # display_results(results)
 # display_confusion_matrix(conf_matrix)
-#
-# # Model export
+# save_results_to_xlsx('results', [('Model 1', *results)])
+
+# # Train model (cross validation)
+# y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
+# results, conf_matrix = generate_results(y_pred, y_test)
+# display_results(results)
+# display_confusion_matrix(conf_matrix)
+# save_results_to_xlsx('results', [('Model 2', *results)])
+
+# # Train model (Leave One Out)
+# y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
+# results, conf_matrix = generate_results(y_pred, y_test)
+# display_results(results)
+# display_confusion_matrix(conf_matrix)
+# save_results_to_xlsx('results', [('Model 3', *results)])
+
+# # Train model (bootstrapping)
+# bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.2)
+# for y_pred, y_test in bootstrapping_results:
+#     results, conf_matrix = generate_results(y_pred, y_test)
+#     display_results(results)
+#     display_confusion_matrix(conf_matrix)
+#     save_results_to_xlsx('results', [('Model 4', *results)])
+
+# # Train model (bootstraping avg)
+# avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
+# save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
+
+# Model export
 # export_onnx_model(model, X_train, y_train, 'model')
 # result = test_onnx_model("model", "test_data")
 # print(result)
