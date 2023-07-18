@@ -1,6 +1,5 @@
 import pickle
 import streamlit as st
-from streamlit_option_menu import option_menu
 
 
 st.set_page_config(page_title="Disease Prediction", page_icon="+")
@@ -8,10 +7,7 @@ st.set_page_config(page_title="Disease Prediction", page_icon="+")
 model = pickle.load(open('model.sav', 'rb'))
 
 with st.sidebar:
-    selected = option_menu('Prediction System',
-                           ['Heart Disease'],
-                           icons=['heart'],
-                           default_index=0)
+    selected = st.selectbox("Choose Disease", ["Heart Disease"])
 
 if selected == "Heart Disease":
     st.title("Heart Disease Risk Prediction")
