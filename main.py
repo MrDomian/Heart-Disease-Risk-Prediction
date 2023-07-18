@@ -302,7 +302,7 @@ def test_onnx_model(filename_onnx, filename_npy):
     return predictions
 
 
-def export_pickle_model(model, X_train, y_train, filename):
+def export_pkl_model(model, X_train, y_train, filename):
     try:
         if X_train.shape[0] != y_train.shape[0]:
             raise ValueError("Number of samples in X_train and y_train must match.")
@@ -315,7 +315,7 @@ def export_pickle_model(model, X_train, y_train, filename):
         print("An error occurred during model export:", e)
 
 
-def test_pickle_model(filename_pickle, filename_npy):
+def test_pkl_model(filename_pickle, filename_npy):
     try:
         with open(f'{filename_pickle}.pkl', 'rb') as file:
             model = pickle.load(file)
@@ -334,22 +334,54 @@ def test_pickle_model(filename_pickle, filename_npy):
     return predictions
 
 
-# # Function testing for: machine learning, model export
-# data = pd.read_csv('heart_disease_risk.csv')
-# X = data.drop('decision', axis=1)
-# y = data['decision']
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-# X_train, y_train = balance_data_smote(X_train, y_train)
-# df = np.array([
-#     [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
-#     [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
-#     [67.0, 1.0, 4.0, 120.0, 229.0, 0.0, 2.0, 129.0, 1.0, 2.6, 2.0, 2.0, 7.0],
-#     [37.0, 1.0, 3.0, 130.0, 250.0, 0.0, 0.0, 187.0, 0.0, 3.5, 3.0, 0.0, 3.0],
-#     [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
-# ])
-# df = df.astype(np.float32)
-# np.save('test_data.npy', df)
-# model = LogisticRegression(solver='liblinear')
+def export_sav_model(model, X_train, y_train, filename):
+    try:
+        if X_train.shape[0] != y_train.shape[0]:
+            raise ValueError("Number of samples in X_train and y_train must match.")
+        model.fit(X_train, y_train)
+
+        with open(f'{filename}.sav', 'wb') as file:
+            pickle.dump(model, file)
+        print("Model exported successfully.")
+    except (ValueError, NotFittedError) as e:
+        print("An error occurred during model export:", e)
+
+
+def test_sav_model(filename_pickle, filename_npy):
+    try:
+        with open(f'{filename_pickle}.sav', 'rb') as file:
+            model = pickle.load(file)
+    except FileNotFoundError:
+        print("Error: Failed to load the pickle model.")
+        return
+
+    try:
+        test_data_path = f'{filename_npy}.npy'
+        test_data = np.load(test_data_path)
+    except FileNotFoundError:
+        print("Error: Failed to load the test data.")
+        return
+
+    predictions = model.predict(test_data)
+    return predictions
+
+
+# Function testing for: machine learning, model export
+data = pd.read_csv('heart_disease_risk.csv')
+X = data.drop('decision', axis=1)
+y = data['decision']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+X_train, y_train = balance_data_smote(X_train, y_train)
+df = np.array([
+    [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
+    [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
+    [67.0, 1.0, 4.0, 120.0, 229.0, 0.0, 2.0, 129.0, 1.0, 2.6, 2.0, 2.0, 7.0],
+    [37.0, 1.0, 3.0, 130.0, 250.0, 0.0, 0.0, 187.0, 0.0, 3.5, 3.0, 0.0, 3.0],
+    [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
+])
+df = df.astype(np.float32)
+np.save('test_data.npy', df)
+model = LogisticRegression(solver='liblinear')
 
 # # Machine learning
 # # Train model (model.predict)
@@ -390,6 +422,10 @@ def test_pickle_model(filename_pickle, filename_npy):
 # result = test_onnx_model("model", "test_data")
 # print(result)
 #
-# export_pickle_model(model, X_train, y_train, 'model')
-# result = test_pickle_model("model", "test_data")
+# export_pkl_model(model, X_train, y_train, 'model')
+# result = test_pkl_model("model", "test_data")
 # print(result)
+
+export_sav_model(model, X_train, y_train, 'model')
+result = test_sav_model("model", "test_data")
+print(result)
