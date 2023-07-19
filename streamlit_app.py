@@ -27,7 +27,7 @@ with st.sidebar:
 logistic_regression = pickle.load(open('Sav_models/logistic_regression.sav', 'rb'))
 naive_bayes = pickle.load(open('Sav_models/naive_bayes.sav', 'rb'))
 svm = pickle.load(open('Sav_models/svm.sav', 'rb'))
-decision_tree = pickle.load(open('Sav_models/decision_tree.sav', 'rb'))
+# decision_tree = pickle.load(open('Sav_models/decision_tree.sav', 'rb'))
 random_forest = pickle.load(open('Sav_models/random_forest.sav', 'rb'))
 ada_boost = pickle.load(open('Sav_models/ada_boost.sav', 'rb'))
 xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
