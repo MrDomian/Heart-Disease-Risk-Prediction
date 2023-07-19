@@ -425,7 +425,7 @@ model = LogisticRegression(solver='liblinear')
 # export_pkl_model(model, X_train, y_train, 'model')
 # result = test_pkl_model("model", "test_data")
 # print(result)
-
-export_sav_model(model, X_train, y_train, 'model')
-result = test_sav_model("model", "test_data")
-print(result)
+#
+# export_sav_model(model, X_train, y_train, 'model')
+# result = test_sav_model("model", "test_data")
+# print(result)
