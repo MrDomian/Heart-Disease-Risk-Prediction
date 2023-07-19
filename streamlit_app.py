@@ -9,7 +9,6 @@ with st.sidebar:
     selected = option_menu('Heart Disease Risk Prediction Models',
                            ['Logistic Regression',
                             'Naive Bayes',
-                            'Decision Tree',
                             'Random Forest',
                             'K-Nearest Neighbors (KNN)',
                             'Support Vector Machine (SVM)',
@@ -80,15 +79,6 @@ elif selected == "Support Vector Machine (SVM)":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
         prediction = svm.predict(features)
-        if prediction[0] == 1:
-            result = "The person has a risk of heart disease."
-        else:
-            result = "The person does not have a risk of heart disease."
-        st.success(result)
-elif selected == "Decision Tree":
-    if st.button("Predict"):
-        features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-        prediction = decision_tree.predict(features)
         if prediction[0] == 1:
             result = "The person has a risk of heart disease."
         else:
