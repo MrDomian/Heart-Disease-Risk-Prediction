@@ -9,8 +9,8 @@ with st.sidebar:
     selected = option_menu('Heart Disease Risk Prediction Models',
                            ['Logistic Regression',
                             'Naive Bayes',
-                            # 'Decision Tree',
-                            # 'Random Forest',
+                            'Decision Tree',
+                            'Random Forest',
                             'K-Nearest Neighbors (KNN)',
                             'Support Vector Machine (SVM)',
                             'Gradient Boosting',
@@ -29,7 +29,7 @@ naive_bayes = pickle.load(open('Sav_models/naive_bayes.sav', 'rb'))
 svm = pickle.load(open('Sav_models/svm.sav', 'rb'))
 # decision_tree = pickle.load(open('Sav_models/decision_tree.sav', 'rb'))
 # random_forest = pickle.load(open('Sav_models/random_forest.sav', 'rb'))
-ada_boost = pickle.load(open('Sav_models/ada_boost.sav', 'rb'))
+# ada_boost = pickle.load(open('Sav_models/ada_boost.sav', 'rb'))
 xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
 sgboost = pickle.load(open('Sav_models/sgboost.sav', 'rb'))
 neural_network = pickle.load(open('Sav_models/neural_network.sav', 'rb'))
@@ -103,15 +103,15 @@ elif selected == "Support Vector Machine (SVM)":
 #         else:
 #             result = "The person does not have a risk of heart disease."
 #         st.success(result)
-elif selected == "Ada Boost":
-    if st.button("Predict"):
-        features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-        prediction = ada_boost.predict(features)
-        if prediction[0] == 1:
-            result = "The person has a risk of heart disease."
-        else:
-            result = "The person does not have a risk of heart disease."
-        st.success(result)
+# elif selected == "Ada Boost":
+#     if st.button("Predict"):
+#         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
+#         prediction = ada_boost.predict(features)
+#         if prediction[0] == 1:
+#             result = "The person has a risk of heart disease."
+#         else:
+#             result = "The person does not have a risk of heart disease."
+#         st.success(result)
 elif selected == "XGBoost":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
