@@ -9,15 +9,15 @@ with st.sidebar:
     selected = option_menu('Heart Disease Risk Prediction Models',
                            ['Logistic Regression',
                             'Naive Bayes',
+                            'Support Vector Machine (SVM)',
+                            'K-Nearest Neighbors (KNN)',
                             'Decision Tree',
                             'Random Forest',
-                            'K-Nearest Neighbors (KNN)',
-                            'Support Vector Machine (SVM)',
                             'Gradient Boosting',
                             'Ada Boost',
-                            'Cat Boost',
                             'XGBoost',
                             'SGBoost',
+                            'Cat Boost',
                             'MLP (Neural Network)',
                             'LGBM'],
                            icons=['heart'],
@@ -30,7 +30,7 @@ svm = pickle.load(open('Sav_models/svm.sav', 'rb'))
 # decision_tree = pickle.load(open('Sav_models/decision_tree.sav', 'rb'))
 # random_forest = pickle.load(open('Sav_models/random_forest.sav', 'rb'))
 # ada_boost = pickle.load(open('Sav_models/ada_boost.sav', 'rb'))
-xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
+# xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
 sgboost = pickle.load(open('Sav_models/sgboost.sav', 'rb'))
 neural_network = pickle.load(open('Sav_models/neural_network.sav', 'rb'))
 # knn = pickle.load(open('Sav_models/knn.sav', 'rb'))
@@ -112,15 +112,15 @@ elif selected == "Support Vector Machine (SVM)":
 #         else:
 #             result = "The person does not have a risk of heart disease."
 #         st.success(result)
-elif selected == "XGBoost":
-    if st.button("Predict"):
-        features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-        prediction = xgboost.predict(features)
-        if prediction[0] == 1:
-            result = "The person has a risk of heart disease."
-        else:
-            result = "The person does not have a risk of heart disease."
-        st.success(result)
+# elif selected == "XGBoost":
+#     if st.button("Predict"):
+#         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
+#         prediction = xgboost.predict(features)
+#         if prediction[0] == 1:
+#             result = "The person has a risk of heart disease."
+#         else:
+#             result = "The person does not have a risk of heart disease."
+#         st.success(result)
 elif selected == "SGBoost":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
@@ -177,4 +177,4 @@ elif selected == "LGBM":
         st.success(result)
 
 else:
-    st.title("Other Disease Prediction")
+    st.write("Model unavailable")
