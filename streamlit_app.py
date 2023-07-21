@@ -7,7 +7,8 @@ st.set_page_config(page_title="Disease Prediction", page_icon="+", layout="wide"
 
 with st.sidebar:
     selected = option_menu('Heart Disease Risk Prediction Models',
-                           ['Logistic Regression',
+                           ['Working models',
+                            'Logistic Regression',
                             'Naive Bayes',
                             'Support Vector Machine (SVM)',
                             'K-Nearest Neighbors (KNN)',
@@ -18,8 +19,8 @@ with st.sidebar:
                             'XGBoost',
                             'SGBoost',
                             'Cat Boost',
-                            'MLP (Neural Network)',
-                            'LGBM'],
+                            'Multilayer Perceptron (MLP/Neural Network)',
+                            'Light Gradient Boosting Machine (LGBM)'],
                            icons=['heart'],
                            default_index=0)
 
@@ -175,6 +176,50 @@ elif selected == "LGBM":
         else:
             result = "The person does not have a risk of heart disease."
         st.success(result)
-
+elif selected == "Working models":
+    if st.button("Predict"):
+        features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
+        prediction_logistic_regression = logistic_regression.predict(features)
+        prediction_naive_bayes = naive_bayes.predict(features)
+        prediction_svm = svm.predict(features)
+        prediction_cat_boost = cat_boost.predict(features)
+        prediction_neural_network = neural_network.predict(features)
+        prediction_lgbm = lgbm.predict(features)
+        if prediction_logistic_regression[0] == 1:
+            result_logistic_regression = "The person has a risk of heart disease. "
+        else:
+            result_logistic_regression = "The person does not have a risk of heart disease. "
+        if prediction_naive_bayes[0] == 1:
+            result_naive_bayes = "The person has a risk of heart disease. "
+        else:
+            result_naive_bayes = "The person does not have a risk of heart disease. "
+        if prediction_svm[0] == 1:
+            result_svm = "The person has a risk of heart disease. "
+        else:
+            result_svm = "The person does not have a risk of heart disease. "
+        if prediction_cat_boost[0] == 1:
+            result_cat_boost = "The person has a risk of heart disease. "
+        else:
+            result_cat_boost = "The person does not have a risk of heart disease. "
+        if prediction_neural_network[0] == 1:
+            result_neural_network = "The person has a risk of heart disease. "
+        else:
+            result_neural_network = "The person does not have a risk of heart disease. "
+        if prediction_lgbm[0] == 1:
+            result_lgbm = "The person has a risk of heart disease. "
+        else:
+            result_lgbm = "The person does not have a risk of heart disease. "
+        st.write("Logistic Regression:")
+        st.success(result_logistic_regression)
+        st.write("Naive Bayes:")
+        st.success(result_naive_bayes)
+        st.write("Support Vector Machine (SVM):")
+        st.success(result_svm)
+        st.write("Cat Boost:")
+        st.success(result_cat_boost)
+        st.write("Multilayer Perceptron (MLP/Neural Network):")
+        st.success(result_neural_network)
+        st.write("Light Gradient Boosting Machine (LGBM):")
+        st.success(result_lgbm)
 else:
     st.write("Model unavailable")
