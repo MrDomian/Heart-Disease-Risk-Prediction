@@ -31,7 +31,7 @@ svm = pickle.load(open('Sav_models/svm.sav', 'rb'))
 decision_tree = pickle.load(open('Sav_models/decision_tree.sav', 'rb'))
 random_forest = pickle.load(open('Sav_models/random_forest.sav', 'rb'))
 ada_boost = pickle.load(open('Sav_models/ada_boost.sav', 'rb'))
-xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
+# xgboost = pickle.load(open('Sav_models/xgboost.sav', 'rb'))
 sgboost = pickle.load(open('Sav_models/sgboost.sav', 'rb'))
 neural_network = pickle.load(open('Sav_models/neural_network.sav', 'rb'))
 knn = pickle.load(open('Sav_models/knn.sav', 'rb'))
@@ -113,15 +113,15 @@ elif selected == "Ada Boost":
         else:
             result = "The person does not have a risk of heart disease."
         st.success(result)
-elif selected == "XGBoost":
-    if st.button("Predict"):
-        features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-        prediction = xgboost.predict(features)
-        if prediction[0] == 1:
-            result = "The person has a risk of heart disease."
-        else:
-            result = "The person does not have a risk of heart disease."
-        st.success(result)
+# elif selected == "XGBoost":
+#     if st.button("Predict"):
+#         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
+#         prediction = xgboost.predict(features)
+#         if prediction[0] == 1:
+#             result = "The person has a risk of heart disease."
+#         else:
+#             result = "The person does not have a risk of heart disease."
+#         st.success(result)
 elif selected == "SGBoost":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
@@ -182,6 +182,11 @@ elif selected == "Working models":
         prediction_logistic_regression = logistic_regression.predict(features)
         prediction_naive_bayes = naive_bayes.predict(features)
         prediction_svm = svm.predict(features)
+        prediction_knn = knn.predict(features)
+        prediction_decision_tree = decision_tree.predict(features)
+        prediction_random_forest = random_forest.predict(features)
+        prediction_gradient_boosting = gradient_boosting.predict(features)
+        prediction_ada_boost = ada_boost.predict(features)
         prediction_sgboost = sgboost.predict(features)
         prediction_cat_boost = cat_boost.predict(features)
         prediction_neural_network = neural_network.predict(features)
@@ -198,6 +203,26 @@ elif selected == "Working models":
             result_svm = "The person has a risk of heart disease. "
         else:
             result_svm = "The person does not have a risk of heart disease. "
+        if prediction_knn[0] == 1:
+            result_knn = "The person has a risk of heart disease. "
+        else:
+            result_knn = "The person does not have a risk of heart disease. "
+        if prediction_decision_tree[0] == 1:
+            result_decision_tree = "The person has a risk of heart disease. "
+        else:
+            result_decision_tree = "The person does not have a risk of heart disease. "
+        if prediction_random_forest[0] == 1:
+            result_random_forest = "The person has a risk of heart disease. "
+        else:
+            result_random_forest = "The person does not have a risk of heart disease. "
+        if prediction_gradient_boosting[0] == 1:
+            result_gradient_boosting = "The person has a risk of heart disease. "
+        else:
+            result_gradient_boosting = "The person does not have a risk of heart disease. "
+        if prediction_ada_boost[0] == 1:
+            result_ada_boost = "The person has a risk of heart disease. "
+        else:
+            result_ada_boost = "The person does not have a risk of heart disease. "
         if prediction_sgboost[0] == 1:
             result_sgboost = "The person has a risk of heart disease. "
         else:
@@ -220,6 +245,16 @@ elif selected == "Working models":
         st.success(result_naive_bayes)
         st.write("Support Vector Machine (SVM):")
         st.success(result_svm)
+        st.write("K-Nearest Neighbors (KNN):")
+        st.success(result_knn)
+        st.write("Decision Tree:")
+        st.success(result_decision_tree)
+        st.write("Random Forest:")
+        st.success(result_random_forest)
+        st.write("Gradient Boosting:")
+        st.success(result_gradient_boosting)
+        st.write("Ada Boost:")
+        st.success(result_ada_boost)
         st.write("SGBoost:")
         st.success(result_sgboost)
         st.write("Cat Boost:")
