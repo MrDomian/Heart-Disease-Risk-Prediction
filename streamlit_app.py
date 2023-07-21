@@ -131,7 +131,7 @@ elif selected == "SGBoost":
         else:
             result = "The person does not have a risk of heart disease."
         st.success(result)
-elif selected == "MLP (Neural Network)":
+elif selected == "Multilayer Perceptron (MLP/Neural Network)":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
         prediction = neural_network.predict(features)
@@ -167,7 +167,7 @@ elif selected == "Cat Boost":
         else:
             result = "The person does not have a risk of heart disease."
         st.success(result)
-elif selected == "LGBM":
+elif selected == "Light Gradient Boosting Machine (LGBM)":
     if st.button("Predict"):
         features = [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
         prediction = lgbm.predict(features)
@@ -182,6 +182,7 @@ elif selected == "Working models":
         prediction_logistic_regression = logistic_regression.predict(features)
         prediction_naive_bayes = naive_bayes.predict(features)
         prediction_svm = svm.predict(features)
+        prediction_sgboost = sgboost.predict(features)
         prediction_cat_boost = cat_boost.predict(features)
         prediction_neural_network = neural_network.predict(features)
         prediction_lgbm = lgbm.predict(features)
@@ -197,6 +198,10 @@ elif selected == "Working models":
             result_svm = "The person has a risk of heart disease. "
         else:
             result_svm = "The person does not have a risk of heart disease. "
+        if prediction_sgboost[0] == 1:
+            result_sgboost = "The person has a risk of heart disease. "
+        else:
+            result_sgboost = "The person does not have a risk of heart disease. "
         if prediction_cat_boost[0] == 1:
             result_cat_boost = "The person has a risk of heart disease. "
         else:
@@ -215,6 +220,8 @@ elif selected == "Working models":
         st.success(result_naive_bayes)
         st.write("Support Vector Machine (SVM):")
         st.success(result_svm)
+        st.write("SGBoost:")
+        st.success(result_sgboost)
         st.write("Cat Boost:")
         st.success(result_cat_boost)
         st.write("Multilayer Perceptron (MLP/Neural Network):")
