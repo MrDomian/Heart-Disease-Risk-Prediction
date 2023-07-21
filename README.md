@@ -1,3 +1,4 @@
+![alt text](https://github.com/MrDomian/Heart-Disease-Risk-Prediction/blob/main/Heart%20disease/Risk_of_heart_disease_banner.jpg)
 # Heart disease risk prediction (in progress)
 The Heart Disease Project aims to apply data analysis and machine learning techniques to identify the risk of heart disease based on available patient features. It can be useful in the field of medicine for supporting diagnosis and clinical decision-making.
 Data source: https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset
