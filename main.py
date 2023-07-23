@@ -21,29 +21,36 @@ from imblearn.combine import SMOTETomek
 from imblearn.over_sampling import SMOTE
 
 
+# Uses the SMOTE (Synthetic Minority Over-sampling Technique) algorithm to balance data
+# by generating synthetic samples for the minority class to equalize the class distribution.
 def balance_data_smote(X, y):
     X_bal, y_bal = SMOTE().fit_resample(X, y)
     return X_bal, y_bal
 
 
+# Combines SMOTE with Tomek Links to improve data balancing
+#  by simultaneously removing excessively represented samples and generating synthetic samples.
 def balance_data_smotetomek(X, y):
     X_bal, y_bal = SMOTETomek().fit_resample(X, y)
     return X_bal, y_bal
 
 
-# Machine learning
+# Trains a single model on the training data and returns the prediction results for the test data.
 def train_model(model, X_train, X_test, y_train):
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     return y_pred
 
 
+# Performs cross-validation of the model on the test data and returns the prediction results.
 def train_model_cross_val(model, X_train, X_test, y_train, y_test, cv):
     model.fit(X_train, y_train)
     y_pred = cross_val_predict(model, X_test, y_test, cv=cv)
     return y_pred
 
 
+# Trains the model and performs Leave One Out (LOO) validation on the test data,
+# returning the prediction results for each sample.
 def train_model_loo(model, X_train, X_test, y_train, y_test):
     model.fit(X_train, y_train)
     loo = LeaveOneOut()
@@ -57,6 +64,8 @@ def train_model_loo(model, X_train, X_test, y_train, y_test):
     return y_pred
 
 
+# Conducts bootstrapping, i.e., repeatedly trains the model on samples with replacement
+# and returns the prediction results for each iteration.
 def train_model_bootstrapping(model, X, y, num_samples, test_size):
     results = []
     for _ in range(num_samples):
@@ -69,6 +78,8 @@ def train_model_bootstrapping(model, X, y, num_samples, test_size):
     return results
 
 
+# Performs bootstrapping using the average method, i.e., trains the model on multiple samples
+# and calculates the average performance results.
 def train_model_avg_bootstrapping(model, X, y, num_samples, test_size):
     results = []
     for _ in range(num_samples):
@@ -89,7 +100,7 @@ def train_model_avg_bootstrapping(model, X, y, num_samples, test_size):
     return avg_results_rounded
 
 
-
+# Computes various performance metrics (accuracy, ROC AUC, G-Mean, etc.) based on predicted and actual values.
 def generate_results(y_pred, y_test):
     accuracy = accuracy_score(y_test, y_pred)
     roc_auc = roc_auc_score(y_test, y_pred)
@@ -107,15 +118,9 @@ def generate_results(y_pred, y_test):
     return list_results, conf_matrix
 
 
+# Displays the performance metrics in a readable format.
 def display_results(list_results):
-    accuracy = list_results[0]
-    roc_auc = list_results[1]
-    g_mean = list_results[2]
-    f1 = list_results[3]
-    sensitivity = list_results[4]
-    specificity = list_results[5]
-    precision = list_results[6]
-    avg = list_results[7]
+    accuracy, roc_auc, g_mean, f1, sensitivity, specificity, precision, avg = list_results
 
     print("Accuracy:", accuracy)
     print("ROC AUC Score:", roc_auc)
@@ -127,6 +132,7 @@ def display_results(list_results):
     print("AVG:", avg)
 
 
+# Displays the confusion matrix as a heatmap plot.
 def display_confusion_matrix(conf_matrix):
     plt.figure(figsize=(8, 6))
     sns.heatmap(conf_matrix, annot=True, cmap="PuBuGn", fmt="d")
@@ -136,6 +142,7 @@ def display_confusion_matrix(conf_matrix):
     plt.show()
 
 
+# Saves the model performance results to an Excel file (.xlsx).
 def save_results_to_xlsx(filename, results_list):
     try:
         wb = openpyxl.load_workbook(f'{filename}.xlsx')
@@ -157,7 +164,7 @@ def save_results_to_xlsx(filename, results_list):
     wb.save(f'{filename}.xlsx')
 
 
-# Feature engineering
+# Performs one-hot encoding for categorical variables.
 def one_hot_encoding(data, categorical_columns):
     encoder = OneHotEncoder()
     encoded_data = pd.DataFrame(encoder.fit_transform(data[categorical_columns]).toarray())
@@ -168,6 +175,7 @@ def one_hot_encoding(data, categorical_columns):
     return data
 
 
+# Performs label encoding for categorical variables.
 def label_encoding(data, categorical_columns):
     encoder = LabelEncoder()
     for col in categorical_columns:
@@ -175,27 +183,21 @@ def label_encoding(data, categorical_columns):
     return data
 
 
+# Assigns numerical values to categorical variables based on mapping.
 def ordinal_encoding(data, categorical_columns, ordinal_mapping):
     for col in categorical_columns:
         data[col] = data[col].map(ordinal_mapping[col])
     return data
 
 
+# Generates polynomial feature names based on the degree.
 def generate_polynomial_feature_names(data, degree):
-    feature_names = []
-    n_features = data.shape[1]
-    for d in range(1, degree + 1):
-        for indices in combinations_with_replacement(range(n_features), d):
-            name = "x0"
-            if len(indices) > 1:
-                name += "**" + str(len(indices))
-            for i in range(1, n_features):
-                if i in indices:
-                    name += " * x" + str(i)
-            feature_names.append(name)
+    feature_names = [f"x0{'**' + str(d) if d > 1 else ''}{' * x' + str(i) if i > 0 else ''}"
+                     for d in range(1, degree + 1) for i in range(data.shape[1])]
     return feature_names
 
 
+# Creates polynomial features for the data.
 def create_polynomial_features(data, degree):
     polynomial_features = PolynomialFeatures(degree=degree, include_bias=False)
     transformed_data = polynomial_features.fit_transform(data)
@@ -204,6 +206,7 @@ def create_polynomial_features(data, degree):
     return data
 
 
+# Creates interaction features by multiplying pairs of features.
 def create_interaction_features(data):
     interaction_data = pd.DataFrame(index=data.index)
     for i in range(len(data.columns)):
@@ -213,6 +216,7 @@ def create_interaction_features(data):
     return data
 
 
+# Standardizes the data by scaling it to have a mean of 0 and a variance of 1.
 def standardize_features(data):
     scaler = StandardScaler()
     standardized_data = scaler.fit_transform(data)
@@ -220,6 +224,7 @@ def standardize_features(data):
     return data
 
 
+# Normalizes the data by scaling it to the range [0, 1].
 def normalize_features(data):
     scaler = MinMaxScaler()
     normalized_data = scaler.fit_transform(data)
@@ -227,6 +232,7 @@ def normalize_features(data):
     return data
 
 
+# Discretizes numerical features into a specified number of bins.
 def discretize_features(data, continuous_columns, n_bins):
     discretizer = KBinsDiscretizer(n_bins=n_bins, encode='ordinal')
     discretized_data = discretizer.fit_transform(data[continuous_columns])
@@ -235,6 +241,7 @@ def discretize_features(data, continuous_columns, n_bins):
     return data
 
 
+# Removes highly correlated features based on a specified threshold.
 def remove_highly_correlated_features(data, threshold):
     correlation_matrix = data.corr().abs()
     upper_triangle = correlation_matrix.where(np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool))
@@ -243,6 +250,7 @@ def remove_highly_correlated_features(data, threshold):
     return data
 
 
+# Removes features with a high percentage of missing data.
 def remove_features_with_high_missing_data(data, missing_threshold):
     missing_data = data.isnull().mean()
     features_to_remove = missing_data[missing_data > missing_threshold].index
@@ -250,23 +258,20 @@ def remove_features_with_high_missing_data(data, missing_threshold):
     return data
 
 
+# Extracts time-based features (e.g., year, month, day of the week, hour) based on a time column.
 def extract_time_features(data, time_column):
     data[time_column] = pd.to_datetime(data[time_column])
     data['year'] = data[time_column].dt.year
     data['month'] = data[time_column].dt.month
-    data['day_of_week'] = data[time_column].dt.dayofweek
+    data['day'] = data[time_column].dt.day
     data['hour'] = data[time_column].dt.hour
+    data['day_of_week'] = data[time_column].dt.dayofweek
+    data['day_of_week_name'] = data[time_column].dt.day_name()
+    data.drop(time_column, axis=1, inplace=True)
     return data
 
 
-def create_time_features(data, time_column):
-    data[time_column] = pd.to_datetime(data[time_column])
-    data['season'] = data[time_column].dt.quarter
-    data['is_weekend'] = data[time_column].dt.weekday.isin([5, 6]).astype(int)
-    return data
-
-
-# Model export
+# Exports the model to the ONNX format.
 def export_onnx_model(model, X_train, y_train, filename):
     try:
         if X_train.shape[0] != y_train.shape[0]:
@@ -281,6 +286,7 @@ def export_onnx_model(model, X_train, y_train, filename):
         print("An error occurred during model export:", e)
 
 
+# Tests the ONNX model on test data.
 def test_onnx_model(filename_onnx, filename_npy):
     try:
         model_path = f'{filename_onnx}.onnx'
@@ -302,6 +308,7 @@ def test_onnx_model(filename_onnx, filename_npy):
     return predictions
 
 
+# Exports the model to the pickle format.
 def export_pkl_model(model, X_train, y_train, filename):
     try:
         if X_train.shape[0] != y_train.shape[0]:
@@ -315,6 +322,7 @@ def export_pkl_model(model, X_train, y_train, filename):
         print("An error occurred during model export:", e)
 
 
+# Tests the pickle model on test data.
 def test_pkl_model(filename_pickle, filename_npy):
     try:
         with open(f'{filename_pickle}.pkl', 'rb') as file:
@@ -334,6 +342,7 @@ def test_pkl_model(filename_pickle, filename_npy):
     return predictions
 
 
+# Exports the model to the SAV format (binary file).
 def export_sav_model(model, X_train, y_train, filename):
     try:
         if X_train.shape[0] != y_train.shape[0]:
@@ -347,6 +356,7 @@ def export_sav_model(model, X_train, y_train, filename):
         print("An error occurred during model export:", e)
 
 
+# Tests the SAV model on test data.
 def test_sav_model(filename_pickle, filename_npy):
     try:
         with open(f'{filename_pickle}.sav', 'rb') as file:
@@ -366,66 +376,66 @@ def test_sav_model(filename_pickle, filename_npy):
     return predictions
 
 
-# # Function testing for: machine learning, model export
-# data = pd.read_csv('heart_disease_risk.csv')
-# X = data.drop('decision', axis=1)
-# y = data['decision']
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-# X_train, y_train = balance_data_smote(X_train, y_train)
-# df = np.array([
-#     [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
-#     [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
-#     [67.0, 1.0, 4.0, 120.0, 229.0, 0.0, 2.0, 129.0, 1.0, 2.6, 2.0, 2.0, 7.0],
-#     [37.0, 1.0, 3.0, 130.0, 250.0, 0.0, 0.0, 187.0, 0.0, 3.5, 3.0, 0.0, 3.0],
-#     [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
-# ])
-# df = df.astype(np.float32)
-# np.save('test_data.npy', df)
-# model = LogisticRegression(solver='liblinear')
+if __name__ == "__main__":
 
-# # Machine learning
-# # Train model (model.predict)
-# y_pred = train_model(model, X_train, X_test, y_train)
-# results, conf_matrix = generate_results(y_pred, y_test)
-# display_results(results)
-# display_confusion_matrix(conf_matrix)
-# save_results_to_xlsx('results', [('Model 1', *results)])
+    data = pd.read_csv('heart_disease_risk.csv')
+    X = data.drop('decision', axis=1)
+    y = data['decision']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+    X_train, y_train = balance_data_smote(X_train, y_train)
+    df = np.array([
+        [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
+        [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
+        [67.0, 1.0, 4.0, 120.0, 229.0, 0.0, 2.0, 129.0, 1.0, 2.6, 2.0, 2.0, 7.0],
+        [37.0, 1.0, 3.0, 130.0, 250.0, 0.0, 0.0, 187.0, 0.0, 3.5, 3.0, 0.0, 3.0],
+        [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
+    ])
+    df = df.astype(np.float32)
+    np.save('test_data.npy', df)
+    model = LogisticRegression(solver='liblinear')
 
-# # Train model (cross validation)
-# y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
-# results, conf_matrix = generate_results(y_pred, y_test)
-# display_results(results)
-# display_confusion_matrix(conf_matrix)
-# save_results_to_xlsx('results', [('Model 2', *results)])
+    # Train model (model.predict)
+    y_pred = train_model(model, X_train, X_test, y_train)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('results', [('Model 1', *results)])
 
-# # Train model (Leave One Out)
-# y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
-# results, conf_matrix = generate_results(y_pred, y_test)
-# display_results(results)
-# display_confusion_matrix(conf_matrix)
-# save_results_to_xlsx('results', [('Model 3', *results)])
+    # Train model (cross validation)
+    y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('results', [('Model 2', *results)])
 
-# # Train model (bootstrapping)
-# bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.2)
-# for y_pred, y_test in bootstrapping_results:
-#     results, conf_matrix = generate_results(y_pred, y_test)
-#     display_results(results)
-#     display_confusion_matrix(conf_matrix)
-#     save_results_to_xlsx('results', [('Model 4', *results)])
+    # Train model (Leave One Out)
+    y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('results', [('Model 3', *results)])
 
-# # Train model (bootstraping avg)
-# avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
-# save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
+    # # Train model (bootstrapping)
+    # bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
+    # for y_pred, y_test in bootstrapping_results:
+    #     results, conf_matrix = generate_results(y_pred, y_test)
+    #     display_results(results)
+    #     display_confusion_matrix(conf_matrix)
+    #     save_results_to_xlsx('results', [('Model 4', *results)])
 
-# Model export
-# export_onnx_model(model, X_train, y_train, 'model')
-# result = test_onnx_model("model", "test_data")
-# print(result)
-#
-# export_pkl_model(model, X_train, y_train, 'model')
-# result = test_pkl_model("model", "test_data")
-# print(result)
-#
-# export_sav_model(model, X_train, y_train, 'model')
-# result = test_sav_model("model", "test_data")
-# print(result)
+    # Train model (bootstraping avg)
+    avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
+    save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
+
+    # Models export
+    export_onnx_model(model, X_train, y_train, 'model')
+    result = test_onnx_model("model", "test_data")
+    print(result)
+
+    export_pkl_model(model, X_train, y_train, 'model')
+    result = test_pkl_model("model", "test_data")
+    print(result)
+
+    export_sav_model(model, X_train, y_train, 'model')
+    result = test_sav_model("model", "test_data")
+    print(result)
