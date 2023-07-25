@@ -383,6 +383,9 @@ if __name__ == "__main__":
     y = data['decision']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
     X_train, y_train = balance_data_smote(X_train, y_train)
+    model = LogisticRegression(solver='liblinear')
+
+    # Saving test data to numpy file
     df = np.array([
         [63.0, 1.0, 1.0, 145.0, 233.0, 1.0, 2.0, 150.0, 0.0, 2.3, 3.0, 0.0, 6.0],
         [67.0, 1.0, 4.0, 160.0, 286.0, 0.0, 2.0, 108.0, 1.0, 1.5, 2.0, 3.0, 3.0],
@@ -392,7 +395,6 @@ if __name__ == "__main__":
     ])
     df = df.astype(np.float32)
     np.save('test_data.npy', df)
-    model = LogisticRegression(solver='liblinear')
 
     # Train model (model.predict)
     y_pred = train_model(model, X_train, X_test, y_train)
@@ -415,13 +417,13 @@ if __name__ == "__main__":
     display_confusion_matrix(conf_matrix)
     save_results_to_xlsx('results', [('Model 3', *results)])
 
-    # # Train model (bootstrapping)
-    # bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
-    # for y_pred, y_test in bootstrapping_results:
-    #     results, conf_matrix = generate_results(y_pred, y_test)
-    #     display_results(results)
-    #     display_confusion_matrix(conf_matrix)
-    #     save_results_to_xlsx('results', [('Model 4', *results)])
+    # Train model (bootstrapping)
+    bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
+    for y_pred, y_test in bootstrapping_results:
+        results, conf_matrix = generate_results(y_pred, y_test)
+        display_results(results)
+        display_confusion_matrix(conf_matrix)
+        save_results_to_xlsx('results', [('Model 4', *results)])
 
     # Train model (bootstraping avg)
     avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
