@@ -17,7 +17,7 @@ user = 'postgres'
 password = 'Damian1999'
 
 table_name = 'heart_disease_risk'
-csv_file_path = '../../exported_data.csv'
+csv_file_path = '../../Data/exported_data.csv'
 
 export_data_from_database(host=host, port=port, database=database, user=user, password=password,
                           csv_file_path=csv_file_path, table_name=table_name)
