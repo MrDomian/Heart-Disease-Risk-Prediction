@@ -6,17 +6,23 @@ from streamlit_option_menu import option_menu
 def load_models():
     models = {
         'Logistic Regression': pickle.load(open('Sav_models/logistic_regression.sav', 'rb')),
+        'Ridge Classifier': pickle.load(open('Sav_models/ridge.sav', 'rb')),
         'Naive Bayes': pickle.load(open('Sav_models/naive_bayes.sav', 'rb')),
         'Support Vector Machine (SVM)': pickle.load(open('Sav_models/svm.sav', 'rb')),
         'K-Nearest Neighbors (KNN)': pickle.load(open('Sav_models/knn.sav', 'rb')),
+        'Nearest Centroid': pickle.load(open('Sav_models/nearest_centroid.sav', 'rb')),
+        'Linear Discriminant': pickle.load(open('Sav_models/linear_discriminant.sav', 'rb')),
+        'Quadratic Discriminant': pickle.load(open('Sav_models/quadratic_discriminant.sav', 'rb')),
         'Decision Tree': pickle.load(open('Sav_models/decision_tree.sav', 'rb')),
+        'Extra Trees': pickle.load(open('Sav_models/extra_trees.sav', 'rb')),
         'Random Forest': pickle.load(open('Sav_models/random_forest.sav', 'rb')),
         'Gradient Boosting': pickle.load(open('Sav_models/gradient_boosting.sav', 'rb')),
-        'Ada Boost': pickle.load(open('Sav_models/ada_boost.sav', 'rb')),
         'SGBoost': pickle.load(open('Sav_models/sgboost.sav', 'rb')),
+        # 'XGBoost': pickle.load(open('Sav_models/xgboost.sav', 'rb')), # error
+        'Ada Boost': pickle.load(open('Sav_models/ada_boost.sav', 'rb')),
         'Cat Boost': pickle.load(open('Sav_models/cat_boost.sav', 'rb')),
+        'Light Gradient Boosting Machine (LGBM)': pickle.load(open('Sav_models/lgbm.sav', 'rb')),
         'Multilayer Perceptron (MLP/Neural Network)': pickle.load(open('Sav_models/neural_network.sav', 'rb')),
-        'Light Gradient Boosting Machine (LGBM)': pickle.load(open('Sav_models/lgbm.sav', 'rb'))
     }
     return models
 
@@ -59,18 +65,23 @@ def main():
     with st.sidebar:
         models_list = ['Working models',
                        'Logistic Regression',
+                       'Ridge Classifier',
                        'Naive Bayes',
                        'Support Vector Machine (SVM)',
                        'K-Nearest Neighbors (KNN)',
+                       'Nearest Centroid',
+                       'Linear Discriminant',
+                       'Quadratic Discriminant',
                        'Decision Tree',
+                       'Extra Trees',
                        'Random Forest',
                        'Gradient Boosting',
-                       'Ada Boost',
-                       # 'XGBoost',
                        'SGBoost',
+                       'XGBoost',
+                       'Ada Boost',
                        'Cat Boost',
-                       'Multilayer Perceptron (MLP/Neural Network)',
-                       'Light Gradient Boosting Machine (LGBM)']
+                       'Light Gradient Boosting Machine (LGBM)',
+                       'Multilayer Perceptron (MLP/Neural Network)']
 
         selected_model = option_menu('Select a model', models_list, icons=['heart'], default_index=0)
 
@@ -98,6 +109,7 @@ def main():
 
             if st.button("Predict"):
                 result = predict_risk(models, selected_model, [features])
+                st.write(selected_model + ":")
                 if result == 1:
                     st.success("The person has a risk of heart disease.")
                 else:
