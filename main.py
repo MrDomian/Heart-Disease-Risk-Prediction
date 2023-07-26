@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pickle
 import openpyxl
@@ -272,7 +273,7 @@ def extract_time_features(data, time_column):
 
 
 # Exports the model to the ONNX format.
-def export_onnx_model(model, X_train, y_train, filename):
+def export_onnx_model(model, X_train, y_train, model_path):
     try:
         if X_train.shape[0] != y_train.shape[0]:
             raise ValueError("Number of samples in X_train and y_train must match.")
@@ -280,23 +281,25 @@ def export_onnx_model(model, X_train, y_train, filename):
 
         initial_type = [('float_input', FloatTensorType([None, X_train.shape[1]]))]
         onnx_model = skl2onnx.convert.convert_sklearn(model, initial_types=initial_type)
-        onnx.save_model(onnx_model, f'{filename}.onnx')
+
+        # Create the folder if it doesn't exist
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+
+        onnx.save_model(onnx_model, model_path)
         print("Model exported successfully.")
     except Exception as e:
         print("An error occurred during model export:", e)
 
 
 # Tests the ONNX model on test data.
-def test_onnx_model(filename_onnx, filename_npy):
+def test_onnx_model(model_path, test_data_path):
     try:
-        model_path = f'{filename_onnx}.onnx'
         session = onnxruntime.InferenceSession(model_path)
     except (FileNotFoundError, onnxruntime.OrtInvalidGraph):
         print("Error: Failed to load the ONNX model.")
         return
 
     try:
-        test_data_path = f'{filename_npy}.npy'
         test_data = np.load(test_data_path)
     except FileNotFoundError:
         print("Error: Failed to load the test data.")
@@ -315,7 +318,7 @@ def export_pkl_model(model, X_train, y_train, filename):
             raise ValueError("Number of samples in X_train and y_train must match.")
         model.fit(X_train, y_train)
 
-        with open(f'{filename}.pkl', 'wb') as file:
+        with open(filename, 'wb') as file:
             pickle.dump(model, file)
         print("Model exported successfully.")
     except (ValueError, NotFittedError) as e:
@@ -325,15 +328,14 @@ def export_pkl_model(model, X_train, y_train, filename):
 # Tests the pickle model on test data.
 def test_pkl_model(filename_pickle, filename_npy):
     try:
-        with open(f'{filename_pickle}.pkl', 'rb') as file:
+        with open(filename_pickle, 'rb') as file:
             model = pickle.load(file)
     except FileNotFoundError:
         print("Error: Failed to load the pickle model.")
         return
 
     try:
-        test_data_path = f'{filename_npy}.npy'
-        test_data = np.load(test_data_path)
+        test_data = np.load(filename_npy)
     except FileNotFoundError:
         print("Error: Failed to load the test data.")
         return
@@ -349,7 +351,7 @@ def export_sav_model(model, X_train, y_train, filename):
             raise ValueError("Number of samples in X_train and y_train must match.")
         model.fit(X_train, y_train)
 
-        with open(f'{filename}.sav', 'wb') as file:
+        with open(filename, 'wb') as file:
             pickle.dump(model, file)
         print("Model exported successfully.")
     except (ValueError, NotFittedError) as e:
@@ -359,14 +361,14 @@ def export_sav_model(model, X_train, y_train, filename):
 # Tests the SAV model on test data.
 def test_sav_model(filename_pickle, filename_npy):
     try:
-        with open(f'{filename_pickle}.sav', 'rb') as file:
+        with open(filename_pickle, 'rb') as file:
             model = pickle.load(file)
     except FileNotFoundError:
         print("Error: Failed to load the pickle model.")
         return
 
     try:
-        test_data_path = f'{filename_npy}.npy'
+        test_data_path = filename_npy
         test_data = np.load(test_data_path)
     except FileNotFoundError:
         print("Error: Failed to load the test data.")
@@ -396,48 +398,48 @@ if __name__ == "__main__":
     df = df.astype(np.float32)
     np.save('test_data.npy', df)
 
-    # Train model (model.predict)
-    y_pred = train_model(model, X_train, X_test, y_train)
-    results, conf_matrix = generate_results(y_pred, y_test)
-    display_results(results)
-    display_confusion_matrix(conf_matrix)
-    save_results_to_xlsx('results', [('Model 1', *results)])
-
-    # Train model (cross validation)
-    y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
-    results, conf_matrix = generate_results(y_pred, y_test)
-    display_results(results)
-    display_confusion_matrix(conf_matrix)
-    save_results_to_xlsx('results', [('Model 2', *results)])
-
-    # Train model (Leave One Out)
-    y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
-    results, conf_matrix = generate_results(y_pred, y_test)
-    display_results(results)
-    display_confusion_matrix(conf_matrix)
-    save_results_to_xlsx('results', [('Model 3', *results)])
-
-    # Train model (bootstrapping)
-    bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
-    for y_pred, y_test in bootstrapping_results:
-        results, conf_matrix = generate_results(y_pred, y_test)
-        display_results(results)
-        display_confusion_matrix(conf_matrix)
-        save_results_to_xlsx('results', [('Model 4', *results)])
-
-    # Train model (bootstraping avg)
-    avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
-    save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
+    # # Train model (model.predict)
+    # y_pred = train_model(model, X_train, X_test, y_train)
+    # results, conf_matrix = generate_results(y_pred, y_test)
+    # display_results(results)
+    # display_confusion_matrix(conf_matrix)
+    # save_results_to_xlsx('results', [('Model 1', *results)])
+    #
+    # # Train model (cross validation)
+    # y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
+    # results, conf_matrix = generate_results(y_pred, y_test)
+    # display_results(results)
+    # display_confusion_matrix(conf_matrix)
+    # save_results_to_xlsx('results', [('Model 2', *results)])
+    #
+    # # Train model (Leave One Out)
+    # y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
+    # results, conf_matrix = generate_results(y_pred, y_test)
+    # display_results(results)
+    # display_confusion_matrix(conf_matrix)
+    # save_results_to_xlsx('results', [('Model 3', *results)])
+    #
+    # # Train model (bootstrapping)
+    # bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
+    # for y_pred, y_test in bootstrapping_results:
+    #     results, conf_matrix = generate_results(y_pred, y_test)
+    #     display_results(results)
+    #     display_confusion_matrix(conf_matrix)
+    #     save_results_to_xlsx('results', [('Model 4', *results)])
+    #
+    # # Train model (bootstraping avg)
+    # avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
+    # save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
 
     # Models export
-    export_onnx_model(model, X_train, y_train, 'model')
-    result = test_onnx_model("model", "test_data")
+    export_onnx_model(model, X_train, y_train, "Data/model.onnx")
+    result = test_onnx_model("Data/model.onnx", "Data/test_data.npy")
     print(result)
 
-    export_pkl_model(model, X_train, y_train, 'model')
-    result = test_pkl_model("model", "test_data")
+    export_pkl_model(model, X_train, y_train, "Data/model.pkl")
+    result = test_pkl_model("Data/model.pkl", "Data/test_data.npy")
     print(result)
 
-    export_sav_model(model, X_train, y_train, 'model')
-    result = test_sav_model("model", "test_data")
+    export_sav_model(model, X_train, y_train, "Data/model.sav")
+    result = test_sav_model("Data/model.sav", "Data/test_data.npy")
     print(result)
