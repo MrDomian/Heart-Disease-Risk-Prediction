@@ -15,7 +15,7 @@ database = 'database'
 user = 'postgres'
 password = 'Damian1999'
 
-csv_file_path = '../../heart_disease_risk.csv'
+csv_file_path = '../../Data/heart_disease_risk.csv'
 table_name = 'heart_disease_risk'
 
 import_data_to_database(host=host, port=port, database=database, user=user, password=password,
