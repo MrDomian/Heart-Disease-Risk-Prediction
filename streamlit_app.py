@@ -1,4 +1,6 @@
 import pickle
+import pandas as pd
+import plotly.express as px
 import streamlit as st
 from streamlit_option_menu import option_menu
 
@@ -61,7 +63,6 @@ def show_user_inputs():
 
 def main():
     st.set_page_config(page_title="Disease Prediction", page_icon="+", layout="wide")
-
     with st.sidebar:
         models_list = ['Working models',
                        'Logistic Regression',
@@ -77,25 +78,33 @@ def main():
                        'Random Forest',
                        'Gradient Boosting',
                        'SGBoost',
-                       'XGBoost',
+                       # 'XGBoost',
                        'Ada Boost',
                        'Cat Boost',
                        'Light Gradient Boosting Machine (LGBM)',
                        'Multilayer Perceptron (MLP/Neural Network)']
 
         selected_model = option_menu('Select a model', models_list, icons=['heart'], default_index=0)
-
     models = load_models()
 
     if selected_model == 'Working models':
         features = show_user_inputs()
-
         if st.button("Predict"):
             results = {}
-
             for model_name in models:
                 result = predict_risk(models, model_name, [features])
                 results[model_name] = result
+
+            results_df = pd.DataFrame(results.items(), columns=['Model', 'Result'])
+            results_df['Result'] = results_df['Result'].astype(str)
+
+            fig = px.bar(results_df, x='Model', y='Result', color='Result',
+                         labels={'Model': 'Machine learning model', 'Result': 'Heart disease risk predict'},
+                         color_discrete_map={'1': 'green'},
+                         category_orders={'Model': models_list[1:]})
+            fig.update_layout(xaxis_tickangle=-30, xaxis_tickfont=dict(size=14))
+            fig.update_traces(showlegend=False)
+            st.plotly_chart(fig, use_container_width=True)
 
             for model_name, result in results.items():
                 st.write(model_name + ":")
