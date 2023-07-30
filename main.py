@@ -9,7 +9,6 @@ import seaborn as sns
 import skl2onnx
 import matplotlib.pyplot as plt
 
-from itertools import combinations_with_replacement
 from onnxconverter_common import FloatTensorType
 from sklearn.exceptions import NotFittedError
 from sklearn.linear_model import LogisticRegression
@@ -379,8 +378,7 @@ def test_sav_model(filename_pickle, filename_npy):
 
 
 if __name__ == "__main__":
-
-    data = pd.read_csv('heart_disease_risk.csv')
+    data = pd.read_csv('Data/heart_disease_risk.csv')
     X = data.drop('decision', axis=1)
     y = data['decision']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
@@ -396,40 +394,40 @@ if __name__ == "__main__":
         [41.0, 0.0, 2.0, 130.0, 204.0, 0.0, 2.0, 172.0, 0.0, 1.4, 1.0, 0.0, 3.0],
     ])
     df = df.astype(np.float32)
-    np.save('test_data.npy', df)
+    np.save('Data/test_data.npy', df)
 
-    # # Train model (model.predict)
-    # y_pred = train_model(model, X_train, X_test, y_train)
-    # results, conf_matrix = generate_results(y_pred, y_test)
-    # display_results(results)
-    # display_confusion_matrix(conf_matrix)
-    # save_results_to_xlsx('results', [('Model 1', *results)])
-    #
-    # # Train model (cross validation)
-    # y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
-    # results, conf_matrix = generate_results(y_pred, y_test)
-    # display_results(results)
-    # display_confusion_matrix(conf_matrix)
-    # save_results_to_xlsx('results', [('Model 2', *results)])
-    #
-    # # Train model (Leave One Out)
-    # y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
-    # results, conf_matrix = generate_results(y_pred, y_test)
-    # display_results(results)
-    # display_confusion_matrix(conf_matrix)
-    # save_results_to_xlsx('results', [('Model 3', *results)])
-    #
-    # # Train model (bootstrapping)
-    # bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
-    # for y_pred, y_test in bootstrapping_results:
-    #     results, conf_matrix = generate_results(y_pred, y_test)
-    #     display_results(results)
-    #     display_confusion_matrix(conf_matrix)
-    #     save_results_to_xlsx('results', [('Model 4', *results)])
-    #
-    # # Train model (bootstraping avg)
-    # avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
-    # save_results_to_xlsx('results', [('Bootstrap', *avg_results)])
+    # Train model (model.predict)
+    y_pred = train_model(model, X_train, X_test, y_train)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('Data/results', [('Model 1', *results)])
+
+    # Train model (cross validation)
+    y_pred = train_model_cross_val(model, X_train, X_test, y_train, y_test, 2)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('Data/results', [('Model 2', *results)])
+
+    # Train model (Leave One Out)
+    y_pred = train_model_loo(model, X_train, X_test, y_train, y_test)
+    results, conf_matrix = generate_results(y_pred, y_test)
+    display_results(results)
+    display_confusion_matrix(conf_matrix)
+    save_results_to_xlsx('Data/results', [('Model 3', *results)])
+
+    # Train model (bootstrapping)
+    bootstrapping_results = train_model_bootstrapping(model, X, y, num_samples=100, test_size=0.3)
+    for y_pred, y_test in bootstrapping_results:
+        results, conf_matrix = generate_results(y_pred, y_test)
+        display_results(results)
+        display_confusion_matrix(conf_matrix)
+        save_results_to_xlsx('Data/results', [('Model 4', *results)])
+
+    # Train model (bootstraping avg)
+    avg_results = train_model_avg_bootstrapping(model, X, y, num_samples=1000, test_size=0.3)
+    save_results_to_xlsx('Data/results', [('Model 5', *avg_results)])
 
     # Models export
     export_onnx_model(model, X_train, y_train, "Data/model.onnx")
