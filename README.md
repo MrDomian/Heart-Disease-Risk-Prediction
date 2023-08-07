@@ -1,5 +1,5 @@
 ![alt text](https://github.com/MrDomian/Heart-Disease-Risk-Prediction/blob/main/Data/Risk_of_heart_disease_banner.jpg)
-# Heart disease risk prediction (In progress)
+# Heart disease risk prediction
 Welcome to the Heart Disease Risk Prediction project repository! This project is dedicated to applying data analysis and machine learning techniques to identify the risk of heart disease based on available patient features. The primary aim of this project is to provide insights that can be beneficial in the medical field, supporting both diagnosis and clinical decision-making processes.
 
 ## Motivation
@@ -31,9 +31,6 @@ The heart disease dataset draws contributions from renowned medical institutions
 ## Installation
 To replicate or explore this project, please make sure you have the required Python packages installed. You can install them using the provided requirements.txt file:
 - pip install -r requirements.txt
-
-## Expected outcomes
-Through this project, we aim to provide insights into heart disease risk prediction using modern data analysis and machine learning techniques. We anticipate gaining a deeper understanding of the dataset's intricacies and uncovering predictive patterns that can assist medical professionals in making informed decisions.
 
 ## Usage
 Feel free to explore the notebooks provided in this repository to gain insights into different aspects of the project, from data preparation to machine learning model evaluation. Your contributions to this project are more than welcome! If you have any suggestions, ideas, or feedback, please don't hesitate to open an issue or submit a pull request.
