@@ -6,6 +6,7 @@ Welcome to the "Heart Disease Risk Prediction:" project repository! This project
 ## Data source
 
 The project uses the heart disease dataset available on kaggle, provided by John Smith. This dataset compiles data from various institutions, making it a comprehensive resource for our analysis.
+
 You can find the dataset here: https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset
 
 ## Motivation
@@ -13,6 +14,7 @@ You can find the dataset here: https://www.kaggle.com/datasets/johnsmith88/heart
 In today's world, with the increasing availability of vast amounts of medical data and advancements in machine learning, there is an opportunity to harness data-driven technologies for predicting the risk of heart diseases. This possibility highlights the immense potential that data analysis holds within the field of medicine.
 
 An article published in the "European Heart Journal" indicates that as artificial intelligence-based technologies become more sophisticated, it becomes possible to utilize medical data to identify early signs of heart diseases and predict their occurrence. These studies reveal that modern technologies can aid in developing predictive models that can forecast the risk of heart diseases based on various patient attributes.
+
 Source of the article: https://academic.oup.com/eurheartj/article/43/8/716/6472699
 
 Heart diseases continue to be a significant public health concern worldwide. Thanks to the growing availability of medical data and progress in machine learning, there is a potential for utilizing data-based techniques to predict and comprehend the risk of heart diseases. This project aims to contribute to this vital domain by investigating pertinent attributes, constructing predictive models, and sharing findings with the community.
@@ -46,6 +48,4 @@ To replicate or explore this project, please make sure you have the required Pyt
 
 ## Usage
 
-Feel free to explore the notebooks provided in this repository to gain insights into different aspects of the project, from data preparation to machine learning model evaluation. Your contributions to this project are more than welcome! If you have any suggestions, ideas, or feedback, please don't hesitate to open an issue or submit a pull request.
-
-Happy exploring!
+Feel free to explore the notebooks provided in this repository to gain insights into different aspects of the project, from data preparation to machine learning model evaluation. Your contributions to this project are more than welcome! If you have any suggestions, ideas, or feedback, please don't hesitate to open an issue or submit a pull request. Happy exploring!
