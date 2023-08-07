@@ -10,7 +10,9 @@ The project uses the heart disease dataset available on Kaggle, provided by John
 ## Motivation
 
 In today's world, with the increasing availability of vast amounts of medical data and advancements in machine learning, there is an opportunity to harness data-driven technologies for predicting the risk of heart diseases. This possibility highlights the immense potential that data analysis holds within the field of medicine.
+
 An article published in the "European Heart Journal" indicates that as artificial intelligence-based technologies become more sophisticated, it becomes possible to utilize medical data to identify early signs of heart diseases and predict their occurrence. These studies reveal that modern technologies can aid in developing predictive models that can forecast the risk of heart diseases based on various patient attributes. Source for the article: https://academic.oup.com/eurheartj/article/43/8/716/6472699
+
 Heart diseases continue to be a significant public health concern worldwide. Thanks to the growing availability of medical data and progress in machine learning, there is a potential for utilizing data-based techniques to predict and comprehend the risk of heart diseases. This project aims to contribute to this vital domain by investigating pertinent attributes, constructing predictive models, and sharing findings with the community.
 
 ## The structure of key files
