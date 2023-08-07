@@ -13,7 +13,7 @@ You can find the dataset here: https://www.kaggle.com/datasets/johnsmith88/heart
 
 In today's world, with the increasing availability of vast amounts of medical data and advancements in machine learning, there is an opportunity to harness data-driven technologies for predicting the risk of heart diseases. This possibility highlights the immense potential that data analysis holds within the field of medicine.
 
-The first article I found, titled “Artificial intelligence-based detection of aortic stenosis from chest radiographs” published in the European Heart Journal - Digital Health, discusses the use of artificial intelligence to detect aortic stenosis from chest radiographs. The study aimed to develop models to detect aortic stenosis (AS) from chest radiographs—one of the most basic imaging tests—with artificial intelligence. The results showed that deep learning models using chest radiographs have the potential to differentiate between radiographs of patients with and without AS. This article is an example of how artificial intelligence-based technologies are becoming more sophisticated and can be used to identify early signs of heart diseases and predict their occurrence.
+The first article I found, titled “Artificial intelligence-based detection of aortic stenosis from chest radiographs” published in the European Heart Journal - Digital Health, discusses the use of artificial intelligence to detect aortic stenosis from chest radiographs. The study aimed to develop models to detect aortic stenosis (AS) from chest radiographs - one of the most basic imaging tests - with artificial intelligence. The results showed that deep learning models using chest radiographs have the potential to differentiate between radiographs of patients with and without AS. This article is an example of how artificial intelligence-based technologies are becoming more sophisticated and can be used to identify early signs of heart diseases and predict their occurrence.
 
 Source of the article: https://academic.oup.com/eurheartj/article/43/8/716/6472699
 
@@ -28,18 +28,10 @@ Heart diseases continue to be a significant public health concern worldwide. Tha
 - Heart disease folder: Contains raw datasets, additional information about them, and other relevant files.
 - Data folder: Contains files with results and other less important data.
 - SQL folder: Contains exercises and queries for learning SQL using PostgreSQL.
-- Sav models Folder: Contains exported models for use in the Streamlit application.
+- Sav models Folder: Contains exported models for use in the streamlit application.
 - heart_disease_risk.csv: Processed CSV file containing heart disease data, prepared for analysis and modeling.
 - processed.cleveland.data: File containing the original unprocessed heart disease data, located in the "Heart disease" folder.
-- streamlit_app.py: Implements the saved models for the Streamlit application.
-
-## Principal dataset researchers
-
-The heart disease dataset draws contributions from renowned medical institutions:
-1. Hungarian Institute of Cardiology, Budapest: Andras Janosi, M.D.
-2. University Hospital, Zurich, Switzerland: William Steinbrunn, M.D.
-3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D.
-4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
+- streamlit_app.py: Implements the saved models for the streamlit application.
 
 ## Installation
 
@@ -49,3 +41,11 @@ To replicate or explore this project, please make sure you have the required Pyt
 ## Usage
 
 Feel free to explore the notebooks provided in this repository to gain insights into different aspects of the project, from data preparation to machine learning model evaluation. Your contributions to this project are more than welcome! If you have any suggestions, ideas, or feedback, please don't hesitate to open an issue or submit a pull request. Happy exploring!
+
+## Principal dataset researchers
+
+The heart disease dataset draws contributions from renowned medical institutions:
+1. Hungarian Institute of Cardiology, Budapest: Andras Janosi, M.D.
+2. University Hospital, Zurich, Switzerland: William Steinbrunn, M.D.
+3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D.
+4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
