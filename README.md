@@ -13,7 +13,7 @@ You can find the dataset here: https://www.kaggle.com/datasets/johnsmith88/heart
 
 In today's world, with the increasing availability of vast amounts of medical data and advancements in machine learning, there is an opportunity to harness data-driven technologies for predicting the risk of heart diseases. This possibility highlights the immense potential that data analysis holds within the field of medicine.
 
-An article published in the "European Heart Journal" indicates that as artificial intelligence-based technologies become more sophisticated, it becomes possible to utilize medical data to identify early signs of heart diseases and predict their occurrence. These studies reveal that modern technologies can aid in developing predictive models that can forecast the risk of heart diseases based on various patient attributes.
+The first article I found, titled “Artificial intelligence-based detection of aortic stenosis from chest radiographs” published in the European Heart Journal - Digital Health, discusses the use of artificial intelligence to detect aortic stenosis from chest radiographs. The study aimed to develop models to detect aortic stenosis (AS) from chest radiographs—one of the most basic imaging tests—with artificial intelligence. The results showed that deep learning models using chest radiographs have the potential to differentiate between radiographs of patients with and without AS. This article is an example of how artificial intelligence-based technologies are becoming more sophisticated and can be used to identify early signs of heart diseases and predict their occurrence.
 
 Source of the article: https://academic.oup.com/eurheartj/article/43/8/716/6472699
 
