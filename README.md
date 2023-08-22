@@ -21,22 +21,22 @@ Heart diseases continue to be a significant public health concern worldwide. Tha
 
 ## The structure of key files
 
-- Data preparation.ipynb: This notebook covers data preprocessing operations such as data cleaning, transformation, and normalization. The goal is to make the data suitable for subsequent analysis and modeling.
-- Data analysis.ipynb: This notebook provides a detailed analysis of the dataset, including visualizations, descriptive statistics, and insights to help understand features and relationships in the data.
-- Feature engineering.ipynb: Here, you'll find the implementation of various methods and strategies for enhancing data features. This includes transformations, feature creation, scaling, dimensionality reduction, and feature selection.
-- Machine learning.ipynb: In this notebook, we delve into the realm of machine learning. We explore various algorithms for heart disease risk detection, evaluate their performance, and extract relevant information for each model.
-- Heart disease folder: Contains raw datasets, additional information about them, and other relevant files.
-- Data folder: Contains files with results and other less important data.
-- SQL folder: Contains exercises and queries for learning SQL using PostgreSQL.
-- Sav models Folder: Contains exported models for use in the streamlit application.
-- heart_disease_risk.csv: Processed CSV file containing heart disease data, prepared for analysis and modeling.
-- processed.cleveland.data: File containing the original unprocessed heart disease data, located in the "Heart disease" folder.
-- streamlit_app.py: Implements the saved models for the streamlit application.
+- **Data preparation.ipynb**: This notebook covers data preprocessing operations such as data cleaning, transformation, and normalization. The goal is to make the data suitable for subsequent analysis and modeling.
+- **Data analysis.ipynb**: This notebook provides a detailed analysis of the dataset, including visualizations, descriptive statistics, and insights to help understand features and relationships in the data.
+- **Feature engineering.ipynb**: Here, you'll find the implementation of various methods and strategies for enhancing data features. This includes transformations, feature creation, scaling, dimensionality reduction, and feature selection.
+- **Machine learning.ipynb**: In this notebook, we delve into the realm of machine learning. We explore various algorithms for heart disease risk detection, evaluate their performance, and extract relevant information for each model.
+- **Heart disease folder**: Contains raw datasets, additional information about them, and other relevant files.
+- **Data folder**: Contains files with results and other less important data.
+- **SQL folder**: Contains exercises and queries for learning SQL using PostgreSQL.
+- **Sav models folder**: Contains exported models for use in the streamlit application.
+- **heart_disease_risk.csv**: Processed CSV file containing heart disease data, prepared for analysis and modeling.
+- **processed.cleveland.data**: File containing the original unprocessed heart disease data, located in the "Heart disease" folder.
+- **streamlit_app.py**: Implements the saved models for the streamlit application.
 
 ## Installation
 
 To replicate or explore this project, please make sure you have the required Python packages installed. You can install them using the provided requirements.txt file:
-- pip install -r requirements.txt
+- **pip install -r requirements.txt**
 
 ## Streamlit Page
 
@@ -47,7 +47,7 @@ Page Features:
 - **Prediction**: The page employs implemented machine learning models to predict whether an individual is at risk of heart disease or not, based on the provided data.
 - **Aggregated Chart**: The page generates an aggregated bar chart that illustrates the distribution of predictions across risk categories. This chart offers a swift overview of how algorithms assess the presence or absence of heart disease.
 
-Web Page Link: https://heart-disease.streamlit.app
+Web Page Link: **https://heart-disease.streamlit.app**
 
 ## Usage
 
