@@ -48,6 +48,7 @@ Page Features:
 - **Aggregated Chart**: The page generates an aggregated bar chart that illustrates the distribution of predictions across risk categories. This chart offers a swift overview of how algorithms assess the presence or absence of heart disease.
 
 Web Page Link: **https://heart-disease.streamlit.app**
+
 ![alt text](https://github.com/MrDomian/Heart-Disease-Risk-Prediction/blob/main/Data/screen_streamlit_page.png)
 
 ## Usage
