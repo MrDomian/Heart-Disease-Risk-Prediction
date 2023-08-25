@@ -42,12 +42,12 @@ To replicate or explore this project, please make sure you have the required Pyt
 
 As part of this project, an interactive web page has been created using the Streamlit tool. This page incorporates implemented machine learning models for predicting the risk of heart disease. It enables users to input relevant values and parameters, upon which predictions concerning the presence or absence of heart disease are generated.
 
-Page Features:
-- **Data Input Form**: Users can input required values, such as age, blood pressure, cholesterol level, etc., which are necessary for prediction.
+Page features:
+- **Data input form**: Users can input required values, such as age, blood pressure, cholesterol level, etc., which are necessary for prediction.
 - **Prediction**: The page employs implemented machine learning models to predict whether an individual is at risk of heart disease or not, based on the provided data.
-- **Aggregated Chart**: The page generates an aggregated bar chart that illustrates the distribution of predictions across risk categories. This chart offers a swift overview of how algorithms assess the presence or absence of heart disease.
+- **Aggregated chart**: The page generates an aggregated bar chart that illustrates the distribution of predictions across risk categories. This chart offers a swift overview of how algorithms assess the presence or absence of heart disease.
 
-Web Page Link: **https://heart-disease.streamlit.app**
+Web page link: **https://heart-disease.streamlit.app**
 
 ![alt text](https://github.com/MrDomian/Heart-Disease-Risk-Prediction/blob/main/Data/screen_streamlit_page.png)
 
